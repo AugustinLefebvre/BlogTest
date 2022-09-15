@@ -8,6 +8,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use Symfony\Component\HttpFoundation\Request;
+use App\Form\ArticleType;
+
 
 class BlogController extends AbstractController
 {
@@ -23,7 +26,8 @@ class BlogController extends AbstractController
     }
 
     #[Route('/', name: 'home')]
-    public function home() {
+    public function home(): Response
+    {
         $user = "Gugusteh";
         $data = [
             'title' => "Homepage",
@@ -32,8 +36,35 @@ class BlogController extends AbstractController
         return $this->render('blog/home.html.twig', $data);
     }
     
+    #[Route('/article/create', name: 'article_create')]
+    #[Route('/article/edit/{id}', name: 'article_edit')]
+    public function articleForm(Article $article = null, Request $request, ArticleRepository $repo): Response
+    {
+        if (is_null($article)) {
+            $article = new Article();
+            $edit = false;
+        } else {
+            $edit = true;
+        }
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->HandleRequest($request);
+        if($form->isSubmitted() && $form->isValid()) {
+            if (is_null($article->getId())) {
+                $article->setCreatedAt(new \DateTimeImmutable());
+            }
+            $repo->add($article, true);
+            return $this->redirectToRoute('article_display', array('id' => $article->getId()));
+        }
+
+        return $this->renderForm('blog/article_form.html.twig', [
+            'formArticle' => $form,
+            'edit' => $edit,
+        ]);
+    }
+
     #[Route('/article/{id}', name: 'article_display')]
-    public function articleDisplay(Article $article) {
+    public function articleDisplay(Article $article): Response
+    {
         $data = [
            'article' => $article,
         ];
