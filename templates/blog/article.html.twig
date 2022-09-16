@@ -2,10 +2,27 @@
 {% block body %}
     <article>
         <h2>{{ article.title }}</h2>
-        <div class="metadata">écrit le {{ article.createdAt | date('d/m/Y') }} à {{ article.createdAt | date('H:i') }} par Gugusteh</div>
+        <div class="metadata">écrit le {{ article.createdAt | date('d/m/Y') }} à {{ article.createdAt | date('H:i') }} par {{ article.author}}</div>
+        <div class="metadata">Catégorie de l'article: {{ article.category.title }}</div>
         <div class="content">
             <img src="{{ article.image }}" alt="">
             {{ article.content | raw }}
         </div>
     </article>
+    <section id="creation-commentaire">
+        {# comment form requires commentForm #}
+        {% include 'blog/comment_form.html.twig' %}
+    </section>
+    <section id="commentaires">
+        {% for comment in article.comments %}
+            <div class="comment">
+                <div class="row">
+                    <div class="col-3">{{ comment.author}} (<small>{{ comment.createdAt | date('d/m/Y à H:i') }}</small>)</div>
+                    <div class="col">
+                        {{ comment.content | raw }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </section>
 {% endblock %}

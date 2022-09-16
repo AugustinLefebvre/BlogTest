@@ -14,6 +14,7 @@
         {{ form_row(formArticle.content, {'label': 'Contenu'}) }}
         {{ form_row(formArticle.image, {'label': 'Image'}) }}
         {{ form_row(formArticle.author, {'label': 'Auteur'}) }}
+        {{ form_row(formArticle.category, {'label': 'Catégorie'}) }}
         {% if edit %}
             {{ form_row(formArticle.submit, {'label': 'Editer l\'article'}) }}
         {% else %}

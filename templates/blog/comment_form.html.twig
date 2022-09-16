@@ -1,0 +1,6 @@
+{% form_theme formComment 'bootstrap_5_layout.html.twig' %}
+{{ form_start(formComment) }}
+    {{ form_errors(formComment) }}
+    {{ form_row(formComment.content, {'label': 'Commentaire'}) }}
+    {{ form_row(formComment.submit, {'label': 'Envoyer'}) }}
+{{ form_end(formComment) }}
