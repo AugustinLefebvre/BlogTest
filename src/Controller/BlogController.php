@@ -73,7 +73,7 @@ class BlogController extends AbstractController
         $comment = new Comment();
         $commentForm = $this->createForm(CommentType::class, $comment);
         $commentForm->HandleRequest($request);
-        if($commentForm->isSubmitted() && $commentForm->isValid()) {
+        if($commentForm->isSubmitted() && $commentForm->isValid() && !is_null($this->getUser())) {
             $comment->setArticle($article);
             $this->createComment($comment, $request);
         }

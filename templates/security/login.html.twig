@@ -12,6 +12,8 @@
         <div class="mb-3">
             <input type="password" class="form-control" required name="_password" placeholder="mot de passe">
         </div>
+        <input type="hidden" name="_target_path" value="{{ referer }}"/>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
         <div class="mb-3">
             <button type="submit" class="btn btn-success">Connexion</button>
         </div>
