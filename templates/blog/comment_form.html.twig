@@ -1,6 +1,6 @@
-{% form_theme formComment 'bootstrap_5_layout.html.twig' %}
-{{ form_start(formComment) }}
-    {{ form_errors(formComment) }}
-    {{ form_row(formComment.content, {'label': 'Commentaire'}) }}
-    {{ form_row(formComment.submit, {'label': 'Envoyer'}) }}
-{{ form_end(formComment) }}
+{% form_theme commentForm 'bootstrap_5_layout.html.twig' %}
+{{ form_start(commentForm) }}
+    {{ form_errors(commentForm) }}
+    {{ form_row(commentForm.content, {'label': 'Ecrire un commentaire:'}) }}
+    {{ form_row(commentForm.submit, {'label': 'Envoyer'}) }}
+{{ form_end(commentForm) }}

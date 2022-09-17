@@ -15,6 +15,7 @@ use App\Form\CommentType;
 use App\Repository\ArticleRepository;
 use App\Repository\CommentRepository;
 
+
 class BlogController extends AbstractController
 {
     public function __construct(private ManagerRegistry $doctrine) {}
@@ -31,7 +32,7 @@ class BlogController extends AbstractController
     #[Route('/', name: 'home')]
     public function home(): Response
     {
-        $user = "Gugusteh";
+        $user = $this->getUser()->getUsername();
         $data = [
             'title' => "Homepage",
             'user' => $user,
@@ -60,7 +61,7 @@ class BlogController extends AbstractController
         }
 
         return $this->renderForm('blog/article_form.html.twig', [
-            'formArticle' => $form,
+            'articleForm' => $form,
             'edit' => $edit,
         ]);
     }
@@ -77,9 +78,10 @@ class BlogController extends AbstractController
             $this->createComment($comment, $request);
         }
 
+        //Article view data
         $data = array(
            'article' => $article,
-           'formComment' => $commentForm,
+           'commentForm' => $commentForm,
         );
         return $this->renderForm('blog/article.html.twig', $data);
     }
@@ -88,7 +90,7 @@ class BlogController extends AbstractController
     {
         $repo = new CommentRepository($this->doctrine);
         $comment->setCreatedAt(new \DateTimeImmutable());
-        $comment->setAuthor('Gugusteh');
+        $comment->setAuthor($this->getUser()->getUsername());
         $repo->add($comment, true);
     }
 }

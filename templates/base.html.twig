@@ -26,15 +26,24 @@
                         <li class="nav-item">
                             <a class="nav-link active" href="{{ path('app_blog') }}">Articles</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('article_create') }}">Créer un article</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Register</a>
-                        </li>
+                        {% if not app.user %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('login') }}">Connexion</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('register') }}">Inscription</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('article_create') }}">Créer un article</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ path('logout') }}">Déconnexion</a>
+                            </li>
+                            <li class="nav-item">
+                                <p class="nav-link">Connecté en tant que: {{ app.user.username }}</p>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
