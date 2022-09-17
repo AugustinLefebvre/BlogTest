@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+{% form_theme registerForm 'bootstrap_5_layout.html.twig' %}
+{% block body %}
+    {{ form_start(registerForm) }}
+        {{ form_errors(registerForm) }}
+        {{ form_row(registerForm.email, {'label': 'Adresse email'}) }}
+        {{ form_row(registerForm.username, {'label': 'Nom d\'utilisateur'}) }}
+        {{ form_row(registerForm.password, {'label': 'mot de passe'}) }}
+        {{ form_row(registerForm.confirm_password, {'label': 'confirmer le mot de passe'}) }}
+        {{ form_row(registerForm.submit, {'label': 'Envoyer'}) }}
+    {{ form_end(registerForm) }}
+{% endblock %}

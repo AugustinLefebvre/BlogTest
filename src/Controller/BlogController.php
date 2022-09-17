@@ -6,10 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\Article;
-use App\Repository\ArticleRepository;
 use Symfony\Component\HttpFoundation\Request;
+
+use App\Entity\Article;
+use App\Entity\Comment;
 use App\Form\ArticleType;
+use App\Form\CommentType;
+use App\Repository\ArticleRepository;
+use App\Repository\CommentRepository;
 
 
 class BlogController extends AbstractController
@@ -28,7 +32,7 @@ class BlogController extends AbstractController
     #[Route('/', name: 'home')]
     public function home(): Response
     {
-        $user = "Gugusteh";
+        $user = $this->getUser()->getUsername();
         $data = [
             'title' => "Homepage",
             'user' => $user,
@@ -57,17 +61,36 @@ class BlogController extends AbstractController
         }
 
         return $this->renderForm('blog/article_form.html.twig', [
-            'formArticle' => $form,
+            'articleForm' => $form,
             'edit' => $edit,
         ]);
     }
 
     #[Route('/article/{id}', name: 'article_display')]
-    public function articleDisplay(Article $article): Response
+    public function articleDisplay(Article $article, Request $request): Response
     {
-        $data = [
+        // Comment creation
+        $comment = new Comment();
+        $commentForm = $this->createForm(CommentType::class, $comment);
+        $commentForm->HandleRequest($request);
+        if($commentForm->isSubmitted() && $commentForm->isValid() && !is_null($this->getUser())) {
+            $comment->setArticle($article);
+            $this->createComment($comment, $request);
+        }
+
+        //Article view data
+        $data = array(
            'article' => $article,
-        ];
-        return $this->render('blog/article.html.twig', $data);
+           'commentForm' => $commentForm,
+        );
+        return $this->renderForm('blog/article.html.twig', $data);
+    }
+
+    public function createComment(Comment $comment, Request $request): Void
+    {
+        $repo = new CommentRepository($this->doctrine);
+        $comment->setCreatedAt(new \DateTimeImmutable());
+        $comment->setAuthor($this->getUser()->getUsername());
+        $repo->add($comment, true);
     }
 }

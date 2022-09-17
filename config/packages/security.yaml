@@ -5,13 +5,26 @@ security:
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         users_in_memory: { memory: null }
+        in_database:
+            entity:
+                class: App\Entity\User
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: in_database
+            form_login:
+                login_path: login
+                check_path: login
+                enable_csrf: true
+                default_target_path: app_blog
+
+            logout:
+                path: logout
+                target: app_blog
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -23,7 +36,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/article/edit, roles: ROLE_USER }
+        - { path: ^/article/create, roles: ROLE_USER }
 
 when@test:
     security:
